@@ -1,25 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+import "semantic-ui-css/semantic.min.css";
+import { Container } from "react-bootstrap";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import SearcBar from "./pages/SearchBar";
+
+import Dashboard from "./layouts/Dashboard";
+import Navi from "./layouts/Navi";
+
+import styles from "./css/App.css";
+import React from "react";
+
+class App extends React.Component {
+  state = { searchUser: "", searchOffice: [] };
+
+  findUser = (event) => {
+    this.setState({ searchUser: event.target.value });
+  };
+
+  handleChange = (event, newValue) => {
+    this.setState({ searchOffice: newValue });
+  };
+
+  render() {
+    const { searchUser, searchOffice } = this.state;
+
+    return (
+      <div className={styles}>
+        <Navi
+          searchOffice={searchOffice}
+          searchBar={<SearcBar findUser={this.findUser} />}
+        />
+        <Container className="main">
+          <Dashboard
+            searchUser={searchUser}
+            searchOffice={searchOffice}
+            handleChange={this.handleChange}
+          />
+        </Container>
+      </div>
+    );
+  }
 }
 
 export default App;
