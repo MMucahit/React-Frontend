@@ -1,30 +1,58 @@
-import React from "react";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
 
-import { Card, Icon, Image } from "semantic-ui-react";
+import { Button, Modal, Card } from "semantic-ui-react";
 
-class OfficeDetail extends React.Component {
-  render() {
-    return (
-      <Card>
-        <Image src="/images/avatar/large/matthew.png" wrapped ui={false} />
-        <Card.Content>
-          <Card.Header>Matthew</Card.Header>
-          <Card.Meta>
-            <span className="date">Joined in 2015</span>
-          </Card.Meta>
-          <Card.Description>
-            Matthew is a musician living in Nashville.
-          </Card.Description>
-        </Card.Content>
-        <Card.Content extra>
-          <a>
-            <Icon name="user" />
-            22 Friends
-          </a>
-        </Card.Content>
-      </Card>
-    );
-  }
+function OfficeDetail() {
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  const searchFindOffices = useSelector(
+    (state) => state.search.selectedOffices
+  );
+  const searchOfficeShap = useSelector((state) => state.search.officeShap);
+
+  return (
+    <Modal
+      className="custom-modal-detail"
+      onClose={handleClose}
+      onOpen={handleShow}
+      open={show}
+      trigger={<Button>OfficeDetail</Button>}
+    >
+      <Modal.Header>
+        {searchFindOffices.map((office) => office.office_name)}
+      </Modal.Header>
+      <Modal.Content>
+        <Card.Group>
+          {searchOfficeShap.map((office, index) => (
+            <Card key={index}>
+              <Card.Content>
+                <Card.Header>{office.name_surname}</Card.Header>
+              </Card.Content>
+              <Card.Content extra>
+                <div className="ui two buttons">
+                  <Button basic color="green">
+                    Aktive %: {office.active_proba.toFixed(2)}
+                  </Button>
+                  <Button basic color="red">
+                    Deaktive %: {office.deactive_proba.toFixed(2)}
+                  </Button>
+                </div>
+              </Card.Content>
+            </Card>
+          ))}
+        </Card.Group>
+      </Modal.Content>
+      <Modal.Actions>
+        <Button onClick={handleClose} positive>
+          Ok
+        </Button>
+      </Modal.Actions>
+    </Modal>
+  );
 }
 
 export default OfficeDetail;

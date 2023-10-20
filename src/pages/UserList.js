@@ -1,105 +1,163 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
 
-import ShapService from "../services/ShapService";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  getUserShap,
+  getUserLineChart,
+  getCurrentPage,
+} from "../store/actions/searchActions";
+
+import UserShapServiceByRegionId from "../services/UsersServiceByRegionId";
+import UserShapService from "../services/UserShapService";
+import LineChartService from "../services/LineChartService";
+import DecodeJwt from "../services/DecodeJwt";
 
 import Paginate from "./Paginate";
-import Shap from "./Shap";
+import UserShap from "./UserShap";
+import LineCharts from "./LineCharts";
 
 import { Label, Table, Menu } from "semantic-ui-react";
 
 const itemsPerPage = 25;
 
-class UserList extends React.Component {
-  state = {
-    image: "",
-    currentPage: 1,
+function UserList() {
+  const [users, setUsers] = useState([]);
+  const [cookie] = useCookies(["Token"]);
+
+  const dispatch = useDispatch();
+
+  const handleDecodeToken = (cookie) => {
+    let decodeToken = new DecodeJwt();
+    const decoded_token = decodeToken.get_token(cookie.Token.access_token);
+    return decoded_token;
   };
 
-  handlePageChange = (event, { activePage }) => {
-    this.setState({ currentPage: activePage });
+  useEffect(() => {
+    async function fectData() {
+      const region = handleDecodeToken(cookie).region_id;
+
+      let userShapServiceByRegionId = new UserShapServiceByRegionId();
+      await userShapServiceByRegionId
+        .getUsersByRegionId(region)
+        .then((result) => setUsers(result.data));
+
+      // let usersService = new UsersService();
+      // await usersService.getUsers().then((result) => setUsers(result.data));
+    }
+    fectData();
+  }, [cookie]);
+
+  const handlePageChange = (event, { activePage }) => {
+    dispatch(getCurrentPage(activePage));
   };
 
-  async handleButtonClick(id) {
-    let shapService = new ShapService();
-    const response = await shapService.getShap(id);
+  const updateUserShap = async (id) => {
+    let userShapService = new UserShapService();
+    const response = await userShapService.getUserShap(id);
 
-    this.setState({ image: response.data.image_data });
-  }
+    dispatch(getUserShap(response.data));
+  };
 
-  render() {
-    const { image, currentPage } = this.state;
-    const { searchUser, searchOffice, users } = this.props;
+  const updateUserLineChart = async (id) => {
+    let lineChartService = new LineChartService();
+    const response = await lineChartService.getLineChart(id);
 
-    let filteredUser = users.filter((user) => {
-      if (searchOffice.length == 0) {
-        return (
-          user.NameSurname.toLowerCase().indexOf(searchUser.toLowerCase()) !==
-          -1
-        );
-      } else {
-        return (
-          searchOffice
-            .map((office) => office.OfficeName)
-            .includes(user.OfficeName) &&
-          user.NameSurname.toLowerCase().indexOf(searchUser.toLowerCase()) !==
-            -1
-        );
-      }
-    });
+    dispatch(getUserLineChart(response.data));
+  };
 
-    const totalPages = Math.ceil(filteredUser.length / itemsPerPage);
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const visibleItems = filteredUser.slice(
-      startIndex,
-      startIndex + itemsPerPage
-    );
+  const searchFindOffices = useSelector(
+    (state) => state.search.selectedOffices
+  );
+  const searchFindUser = useSelector((state) => state.search.searchUser);
+  const currentPage = useSelector((state) => state.search.currentPage);
 
-    return (
-      <Table celled>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell>EmployeeId</Table.HeaderCell>
-            <Table.HeaderCell>Name Surname</Table.HeaderCell>
-            <Table.HeaderCell>Office Name</Table.HeaderCell>
-            <Table.HeaderCell>Sex</Table.HeaderCell>
-            <Table.HeaderCell>Status</Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
+  let filteredUser = users.filter((user) => {
+    if (searchFindOffices.length === 0) {
+      return (
+        user.name_surname
+          .toLowerCase()
+          .indexOf(searchFindUser.toLowerCase()) !== -1 &&
+        user.employee_status_id === "Active"
+      );
+    } else {
+      return (
+        searchFindOffices
+          .map((office) => office.office_name)
+          .includes(user.office_name) &&
+        user.name_surname
+          .toLowerCase()
+          .indexOf(searchFindUser.toLowerCase()) !== -1
+      );
+    }
+  });
 
-        <Table.Body>
-          {visibleItems.map((user, index) => (
-            <Table.Row key={index}>
-              <Table.Cell>
-                <Label ribbon>{user.EmployeeId}</Label>
-              </Table.Cell>
+  const totalPages = Math.ceil(filteredUser.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const visibleItems = filteredUser.slice(
+    startIndex,
+    startIndex + itemsPerPage
+  );
+
+  return (
+    <Table celled>
+      <Table.Header>
+        <Table.Row>
+          <Table.HeaderCell>EmployeeId</Table.HeaderCell>
+          <Table.HeaderCell>Name Surname</Table.HeaderCell>
+          <Table.HeaderCell>Office Name</Table.HeaderCell>
+          <Table.HeaderCell>Sex</Table.HeaderCell>
+          <Table.HeaderCell>Status</Table.HeaderCell>
+          <Table.HeaderCell>Active Point</Table.HeaderCell>
+        </Table.Row>
+      </Table.Header>
+
+      <Table.Body>
+        {visibleItems.map((user, index) => (
+          <Table.Row key={index}>
+            <Table.Cell>
+              <Label ribbon>{user.employee_id}</Label>
+            </Table.Cell>
+            <Table.Cell onClick={() => updateUserShap(user.employee_id)}>
+              <UserShap user={user} />
+            </Table.Cell>
+            <Table.Cell>{user.office_name}</Table.Cell>
+            <Table.Cell>{user.sex}</Table.Cell>
+            {user.employee_status_id === "Active" ? (
               <Table.Cell
-                onClick={() => this.handleButtonClick(user.EmployeeId)}
+                onClick={() => updateUserLineChart(user.employee_id)}
+                positive
               >
-                <Shap user={user} image={image} />
+                <LineCharts user={user} />
               </Table.Cell>
-              <Table.Cell>{user.OfficeName}</Table.Cell>
-              <Table.Cell>{user.Sex}</Table.Cell>
-              <Table.Cell>{user.EmployeeStatusId}</Table.Cell>
-            </Table.Row>
-          ))}
-        </Table.Body>
-
-        <Table.Footer>
-          <Table.Row>
-            <Table.HeaderCell colSpan="3">
-              <Menu floated="right" pagination>
-                <Paginate
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  onPageChange={this.handlePageChange}
-                />
-              </Menu>
-            </Table.HeaderCell>
+            ) : (
+              <Table.Cell
+                onClick={() => updateUserLineChart(user.employee_id)}
+                negative
+              >
+                <LineCharts user={user} />
+              </Table.Cell>
+            )}
+            <Table.Cell>{user.active_point}</Table.Cell>
           </Table.Row>
-        </Table.Footer>
-      </Table>
-    );
-  }
+        ))}
+      </Table.Body>
+
+      <Table.Footer>
+        <Table.Row>
+          <Table.HeaderCell colSpan="3">
+            <Menu floated="right" pagination>
+              <Paginate
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
+            </Menu>
+          </Table.HeaderCell>
+        </Table.Row>
+      </Table.Footer>
+    </Table>
+  );
 }
 
 export default UserList;

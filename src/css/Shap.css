@@ -1,8 +1,17 @@
-.custom-modal {
+.custom-modal{
     top: 50%;
     left: 50%;
     bottom: 50%;
     height:fit-content;
+    width: fit-content;
+    transform: translate(-50%, -50%);
+  }
+
+.custom-modal-detail {
+    top: 50%;
+    left: 50%;
+    bottom: 50%;
+    /* height:fit-content; */
     width: fit-content;
     transform: translate(-50%, -50%);
   }

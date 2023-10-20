@@ -1,67 +1,59 @@
 import React from "react";
 
-import UserService from "../services/UserService";
+import { Route, Routes } from "react-router-dom";
 
 import Categoreis from "./Categories.js";
 import UserList from "../pages/UserList.js";
-import FixedTags from "../pages/FixedTags";
+import OfficeShap from "../pages/OfficeShap.js";
+import Login from "../pages/Login.js";
 
 import { Container, Row, Col } from "react-bootstrap";
 
-class Dashboard extends React.Component {
-  state = { users: [] };
-
-  async componentDidMount() {
-    let userService = new UserService();
-    const response = await userService.getUsers();
-
-    this.setState({ users: response.data });
-  }
-
-  // handleChange = (event) => {
-  //   const {
-  //     target: { value },
-  //   } = event;
-  //   this.setState({
-  //     searchOffice: typeof value === "string" ? value.split(",") : value,
-  //   });
-  // };
-
-  render() {
-    const { updateData, searchUser, searchOffice, handleChange } = this.props;
-    const { users } = this.state;
-
-    return (
-      <div>
-        <Container>
-          <Row>
-            <Col xs={3}>
-              <Categoreis
-                fixedTags={
-                  <FixedTags
-                    handleChange={handleChange}
-                    searchOffice={searchOffice}
-                  />
-                }
-              />
-              {/* <FixedTags
-                handleChange={this.handleChange}
-                searchOffice={searchOffice}
-              /> */}
-            </Col>
-            <Col xs={9}>
-              <UserList
-                users={users}
-                updateData={updateData}
-                searchUser={searchUser}
-                searchOffice={searchOffice}
-              />
-            </Col>
-          </Row>
-        </Container>
-      </div>
-    );
-  }
+function Dashboard() {
+  return (
+    <div>
+      <Container>
+        <Row>
+          <Col xs={3}>
+            <Categoreis />
+          </Col>
+          <Col xs={9}>
+            <Routes>
+              <Route exact path="/" element={<UserList />} />
+              <Route path="/users" element={<UserList />} />
+              <Route path="/office-detail" element={<OfficeShap />}></Route>
+              <Route path="/login" element={<Login />}></Route>
+            </Routes>
+          </Col>
+        </Row>
+      </Container>
+    </div>
+  );
 }
 
 export default Dashboard;
+
+// class Dashboard extends React.Component {
+//   render() {
+//     return (
+//       <div>
+//         <Container>
+//           <Row>
+//             <Col xs={3}>
+//               <Categoreis />
+//             </Col>
+//             <Col xs={9}>
+//               <Routes>
+//                 <Route exact path="/" element={<UserList />} />
+//                 <Route path="/users" element={<UserList />} />
+//                 <Route path="/office-detail" element={<OfficeShap />}></Route>
+//               </Routes>
+//             </Col>
+//           </Row>
+//         </Container>
+//       </div>
+//     );
+//   }
+// }
+
+// export default Dashboard;
