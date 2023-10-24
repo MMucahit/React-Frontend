@@ -3,18 +3,11 @@ import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useCookies } from "react-cookie";
 
-import LoginError from "../pages/ErrorAlert";
+// import LoginError from "../pages/ErrorAlert";
 
 import GetToken from "../services/GetToken";
 
-import {
-  Button,
-  Form,
-  Grid,
-  Header,
-  Segment,
-  Message,
-} from "semantic-ui-react";
+import { Button, Form, Grid, Header, Segment } from "semantic-ui-react";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -34,7 +27,7 @@ function Login() {
     let getToken = new GetToken();
     const response = await getToken.get_token(email, password);
 
-    console.log(response);
+    console.log(response.data);
 
     if (!response.data.error) {
       setCookie("Token", response.data, { path: "/" });

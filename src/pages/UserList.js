@@ -8,6 +8,8 @@ import {
   getCurrentPage,
 } from "../store/actions/searchActions";
 
+// import UsersService from "../services/UsersService";
+
 import UserShapServiceByRegionId from "../services/UsersServiceByRegionId";
 import UserShapService from "../services/UserShapService";
 import LineChartService from "../services/LineChartService";
@@ -69,6 +71,8 @@ function UserList() {
   const searchFindOffices = useSelector(
     (state) => state.search.selectedOffices
   );
+
+  console.log(searchFindOffices);
   const searchFindUser = useSelector((state) => state.search.searchUser);
   const currentPage = useSelector((state) => state.search.currentPage);
 

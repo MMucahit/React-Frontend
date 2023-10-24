@@ -1,11 +1,17 @@
 import axios from "axios";
 
 export default class GetToken {
-  get_token(email, password) {
-    const response = axios.post("http://127.0.0.1:8000/login", {
-      email: email,
-      password: password,
-    });
+  get_token(username, password) {
+    const response = axios.post(
+      "https://deep-agent-ftqcb6wz6q-uc.a.run.app/login",
+      {
+        username: username,
+        password: password,
+      }
+    );
     return response;
   }
 }
+
+// https://deep-agent-ftqcb6wz6q-uc.a.run.app/login
+// http://localhost:8000/login
