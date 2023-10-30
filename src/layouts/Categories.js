@@ -1,33 +1,32 @@
 import React from "react";
 
-import FixedTags from "../pages/FixedTags";
+import OfficeSelectBox from "../pages/OfficeSelectBox";
+import PointSelectBox from "../pages/PointSelectBox";
+import RegionSelectBox from "../pages/RegionSelectBox";
 
 import { Menu } from "semantic-ui-react";
+import CiroSelectBox from "../pages/CiroSelectBox";
 
 function Categories() {
   return (
-    <Menu pointing vertical>
-      <FixedTags />
-      <Menu.Item name="home" />
-      <Menu.Item name="messages" />
-      <Menu.Item name="friends" />
-    </Menu>
+    <div>
+      <Menu pointing vertical>
+        <OfficeSelectBox />
+      </Menu>
+
+      <Menu pointing vertical>
+        <PointSelectBox />
+      </Menu>
+
+      <Menu pointing vertical>
+        <RegionSelectBox />
+      </Menu>
+
+      <Menu pointing vertical>
+        <CiroSelectBox />
+      </Menu>
+    </div>
   );
 }
 
 export default Categories;
-
-// class Categoreis extends React.Component {
-//   render() {
-//     return (
-//       <Menu pointing vertical>
-//         <FixedTags />
-//         <Menu.Item name="home" />
-//         <Menu.Item name="messages" />
-//         <Menu.Item name="friends" />
-//       </Menu>
-//     );
-//   }
-// }
-
-// export default Categoreis;

@@ -14,18 +14,3 @@ function App() {
 }
 
 export default App;
-
-// class App extends React.Component {
-//   render() {
-//     return (
-//       <div className={styles}>
-//         <Navi />
-//         <Container className="main">
-//           <Dashboard />
-//         </Container>
-//       </div>
-//     );
-//   }
-// }
-
-// export default App;

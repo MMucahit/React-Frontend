@@ -1,54 +1,34 @@
 import {
-  USERS,
   OFFİCE,
   FİND_OFFİCE,
   FİND_USER,
-  USER_SHAP,
-  OFFİCE_SHAP,
-  USER_GRAPH,
-  USER_LİNE_CHART,
   CURRENT_PAGE,
-  SELECTED_USER,
+  FİND_POİNT,
+  FİND_REGİON,
+  FİND_CİRO_POİNT,
 } from "../actions/searchActions";
 import {
-  Users,
   Offices,
   selectedOffices,
   searchUser,
-  userShap,
-  officeShap,
-  userGraph,
-  userLineChart,
   currentPage,
-  selectedUser,
+  selectedPoint,
+  selectedRegion,
+  selectedCiroPoint,
 } from "../initialValues/initials";
 
 const initialState = {
-  Users: Users,
   Offices: Offices,
   selectedOffices: selectedOffices,
   searchUser: searchUser,
-  userShap: userShap,
-  officeShap: officeShap,
-  userGraph: userGraph,
-  userLineChart: userLineChart,
   currentPage: currentPage,
-  selectedUser: selectedUser,
+  selectedPoint: selectedPoint,
+  selectedRegion: selectedRegion,
+  selectedCiroPoint: selectedCiroPoint,
 };
 
 export default function searchReducer(state = initialState, { type, payload }) {
   switch (type) {
-    case USERS:
-      return {
-        ...state,
-        Users: payload, //[...state.SearchOffice, payload],
-      };
-    case SELECTED_USER:
-      return {
-        ...state,
-        selectedUser: payload,
-      };
-
     case OFFİCE:
       return {
         ...state,
@@ -64,30 +44,25 @@ export default function searchReducer(state = initialState, { type, payload }) {
         ...state,
         searchUser: payload,
       };
-    case USER_SHAP:
-      return {
-        ...state,
-        userShap: payload,
-      };
-    case USER_GRAPH:
-      return {
-        ...state,
-        userGraph: payload,
-      };
-    case USER_LİNE_CHART:
-      return {
-        ...state,
-        userLineChart: payload,
-      };
-    case OFFİCE_SHAP:
-      return {
-        ...state,
-        officeShap: payload,
-      };
     case CURRENT_PAGE:
       return {
         ...state,
         currentPage: payload,
+      };
+    case FİND_POİNT:
+      return {
+        ...state,
+        selectedPoint: payload,
+      };
+    case FİND_REGİON:
+      return {
+        ...state,
+        selectedRegion: payload,
+      };
+    case FİND_CİRO_POİNT:
+      return {
+        ...state,
+        selectedCiroPoint: payload,
       };
     default:
       return state;

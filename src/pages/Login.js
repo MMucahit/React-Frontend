@@ -12,7 +12,7 @@ import { Button, Form, Grid, Header, Segment } from "semantic-ui-react";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState();
   const [, setCookie] = useCookies(["Token"]);
 
   const handleEmail = (event) => {
@@ -27,13 +27,10 @@ function Login() {
     let getToken = new GetToken();
     const response = await getToken.get_token(email, password);
 
-    console.log(response.data);
-
     if (!response.data.error) {
       setCookie("Token", response.data, { path: "/" });
     } else {
-      setErrors(response.data.error);
-      console.log(response.data.error);
+      setErrors(response.data);
     }
   };
 
@@ -58,7 +55,13 @@ function Login() {
               placeholder="Password"
               type="password"
             />
-
+            {errors && (
+              <div style={{ color: "red", marginBottom: "10px" }}>
+                {errors.error.map((err, index) => (
+                  <p key={index}>{err.error}</p>
+                ))}
+              </div>
+            )}
             <Button
               as={NavLink}
               to="/users"

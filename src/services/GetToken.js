@@ -12,6 +12,5 @@ export default class GetToken {
     return response;
   }
 }
-
 // https://deep-agent-ftqcb6wz6q-uc.a.run.app/login
 // http://localhost:8000/login

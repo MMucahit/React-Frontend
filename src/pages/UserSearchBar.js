@@ -6,7 +6,7 @@ import { findUser } from "../store/actions/searchActions";
 import { Input } from "semantic-ui-react";
 import { Row, Col } from "react-bootstrap";
 
-function SearchBar() {
+function UserSearchBar() {
   const dispatch = useDispatch();
 
   const updateSelectedUserData = (event) => {
@@ -21,7 +21,7 @@ function SearchBar() {
             id="search user"
             icon="users"
             iconPosition="left"
-            placeholder="Search users..."
+            placeholder="Kullanıcı Ara..."
             onChange={updateSelectedUserData}
           />
         </Col>
@@ -31,4 +31,4 @@ function SearchBar() {
   );
 }
 
-export default SearchBar;
+export default UserSearchBar;

@@ -21,6 +21,7 @@ function Auth() {
           </Container>
         </div>
       ) : (
+        // (window.location.href = "/login")
         <Login />
       )}
     </div>

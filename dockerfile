@@ -27,3 +27,6 @@ EXPOSE 80
 
 # Start Nginx when the container runs
 CMD ["nginx", "-g", "daemon off;"]
+
+## docker build --tag us-central1-docker.pkg.dev/deep-agent-401913/deep-agent/react-app .
+## docker push us-central1-docker.pkg.dev/deep-agent-401913/deep-agent/react-app
